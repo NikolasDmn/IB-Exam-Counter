@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IB Exam Counter</title>
+    <script>function startTime() {
+            const today = new Date();
+            let h = today.getHours();
+            let m = today.getMinutes();
+            let s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            document.getElementById("clockDiv").innerHTML = h + ":" + m + ":" + s;
+            setTimeout(startTime, 1000);
+        }
+
+        function checkTime(i) {
+            if (i < 10) {
+                i = "0" + i;
+            } // add zero in front of numbers < 10
+            return i;
+        }
+        let subjects = [];
+        function addSubjectRow() {
+            let name = window.prompt("Enter Subject Name");
+            addData(name, "subjectRow");
+            subjects.push(name);
+            addMinSubject();
+        }
+
+        function addMinSubject() {
+            let element = document.createElement("input");
+            element.setAttribute("id", `subjectTime${subjects.length - 1}`);
+            element.setAttribute("class", "minInput");
+            element.setAttribute("type", "number");
+            let parent = document.createElement("td");
+            parent.appendChild(element);
+            document.getElementById("timeRow").appendChild(parent);
+        }
+        function addData(text, id) {
+            let element = document.createElement("td");
+            let inText = document.createTextNode(text);
+            element.appendChild(inText);
+            document.getElementById(id).appendChild(element);
+        }
+
+        function clearData() {
+            document.getElementById("30Row").innerHTML = "";
+            addData("30 Min", "30Row");
+            document.getElementById("5Row").innerHTML = "";
+            addData("5 Min", "5Row");
+            document.getElementById("finRow").innerHTML = "";
+            addData("End Time", "finRow");
+        }
+
+        function addMinutes(date, minutes) {
+            return new Date(date.getTime() + minutes * 60000);
+        }
+
+        function startExam() {
+            clearData();
+            subjects.forEach((value, index) => {
+                console.log(index);
+                let element = document.getElementById(`subjectTime${index}`);
+                tTime = element.value;
+                let examTimeT = addMinutes(new Date(), tTime - 30);
+                addData(
+                    `${examTimeT.getHours()}:${examTimeT.getMinutes()}:${examTimeT.getSeconds()}`,
+                    "30Row"
+                );
+                let examTimeF = addMinutes(new Date(), tTime - 5);
+                addData(
+                    `${examTimeF.getHours()}:${examTimeF.getMinutes()}:${examTimeF.getSeconds()}`,
+                    "5Row"
+                );
+                let endTime = addMinutes(new Date(), tTime);
+                addData(
+                    `${endTime.getHours()}:${endTime.getMinutes()}:${endTime.getSeconds()}`,
+                    "finRow"
+                );
+            });
+            //create for loop over length of array
+        }
+    </script>
+    <style>
+        body {
+            background-color: hsl(0, 0%, 15%);
+            font-family: monospace;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        #container {
+            margin: auto;
+            min-width: 55%;
+            width: fit-content;
+            border: 3px solid #ad7ec7;
+            padding: 2rem;
+            margin-top: 5%;
+            aspect-ratio: 2/1;
+            align-items: center;
+            position: relative;
+            text-align: center;
+            border-radius: 2rem;
+            background-color: hsl(0, 0%, 10%);
+        }
+
+        #container>* {
+            margin: auto;
+        }
+
+        #timeTable>* {
+            color: #fff;
+            text-align: left;
+            font-size: 2.5rem;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        #timeTable {
+            margin: 2.5rem;
+            align-items: center;
+        }
+
+        table td+td {
+            border-left: 0.25rem solid white;
+            padding: 0 1rem;
+            text-align: center;
+        }
+
+        #clockDiv {
+            color: #fff;
+            font-size: 8rem;
+            text-align: center;
+        }
+
+        #startButton {
+            background-color: #ad7ec7;
+            border: none;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 2rem;
+            cursor: pointer;
+            border-radius: 1rem;
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        #startButton:hover {
+            font-size: 2.1rem;
+        }
+
+        #addButton {
+            background-color: #ad7ec7;
+            border: none;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 2rem;
+            cursor: pointer;
+            border-radius: 1rem;
+            aspect-ratio: 1/1;
+            margin: 0 auto;
+        }
+
+        #addButton:hover {
+            font-size: 2.1rem;
+        }
+
+        .minInput {
+            color: #fff;
+            text-align: center;
+            font-size: 2.5rem;
+            width: 9rem;
+            border-width: 0px;
+            border-radius: 1rem;
+            background-color: hsl(0, 0%, 15%);
+        }
+    </style>
+
+</head>
+
+<body onload="startTime()">
+    <div id="container">
+        <div id="itemsDiv">
+            <div id="clockDiv"></div>
+            <table id="timeTable">
+                <tr id="subjectRow">
+                    <td>Subject</td>
+                </tr>
+                <tr id="timeRow">
+                    <td>Total Time</td>
+                </tr>
+                <tr id="30Row">
+                    <td>30 Min</td>
+                </tr>
+                <tr id="5Row">
+                    <td>5 Min</td>
+                </tr>
+                <tr id="finRow">
+                    <td>End Time</td>
+                </tr>
+            </table>
+            <button onclick="addSubjectRow()" id="addButton">+</button>
+            <button onclick="startExam()" id="startButton">START</button>
+        </div>
+    </div>
+</body>
+
+</html>
